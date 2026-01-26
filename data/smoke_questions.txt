@@ -1,0 +1,42 @@
+# Realna vprašanja za smoke test (Kmetija Pod Goro)
+Kdaj ste odprti?
+Ali ste odprti ob ponedeljkih?
+Kdaj je zadnji prihod na kosilo?
+Ali moram rezervirati vnaprej?
+
+Kaj je za zajtrk?
+Ali je zajtrk vključen v ceno?
+Koliko stane večerja?
+Ali ponujate večerjo?
+
+Koliko stane kosilo?
+Kakšna je vikend ponudba?
+Imate degustacijski meni?
+
+Koliko sob imate?
+Koliko stane nočitev?
+Imate družinsko sobo?
+Ali imajo sobe balkon?
+Kdaj je prijava?
+Kdaj je odjava?
+Koliko nočitev najmanj moram rezervirati julija?
+
+Kdo je gospodar kmetije?
+Povejte mi o družini.
+Kakšne živali imate?
+Ali lahko jahamo?
+
+Kje ste?
+Kakšen je vaš naslov?
+Imate telefon?
+
+Kaj prodajate?
+Imate marmelado?
+Prodajate bunko?
+Ali imate spletno trgovino?
+
+Kaj je v okolici?
+Kje je najbližje smučišče?
+
+Rad bi rezerviral sobo.
+Rad bi rezerviral mizo.

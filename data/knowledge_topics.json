@@ -1,0 +1,844 @@
+[
+  {
+    "key": "druzina",
+    "priority": 90,
+    "triggers": [
+      "družina",
+      "druzina",
+      "povejte mi o družini",
+      "kdo ste",
+      "kdo ste vi",
+      "kdo ste na kmetiji",
+      "kdo kuha",
+      "kdo kuha pri vas",
+      "kdo je aljaž",
+      "kdo je julija",
+      "kdo je ana",
+      "kdo je barbara",
+      "kdo je angelca"
+    ],
+    "answer": "Na Domačiji Kmetija Pod Goro za goste skrbimo družinsko:\n\n👨‍🌾 Jure (gospodar)\n👩‍🍳 Maja (turizem in komunikacija)\n👵 Ivanka (kuhinja, pohorska gibanica)\n🧑 Tine, 👧 Lara, 👧 Nika\n\nTradicionalno delujemo od leta 1981."
+  },
+  {
+    "key": "gospodar",
+    "priority": 95,
+    "triggers": [
+      "kdo je gospodar",
+      "gospodar kmetije",
+      "gospodar na kmetiji"
+    ],
+    "answer": "Gospodar kmetije je Jure. Če želite, vam lahko povem še več o družini in domačiji."
+  },
+  {
+    "key": "lokacija",
+    "priority": 80,
+    "triggers": [
+      "kako vas najdemo",
+      "kako vas najdem",
+      "kako vas najdem?",
+      "kje ste",
+      "naslov",
+      "lokacija",
+      "nadmorska višina",
+      "nadmorska visina",
+      "nadmorski",
+      "nadmorska",
+      "kako pridem do vas",
+      "kako pridem do kmetije",
+      "kako do vas"
+    ],
+    "answer": "📍 Kmetija Pod Goro, Gorska cesta 7, 2315 Zeleno Polje\n\nSmo na približno **680 m nadmorske višine** v pohorski vasici Gorska vas nad Zelenim Poljem.\n\n📞 02 700 12 34\n📱 031 777 888\n📧 info@kmetijapodgoro.si"
+  },
+  {
+    "key": "vikend_ponudba",
+    "priority": 85,
+    "triggers": [
+      "vikend ponudba",
+      "vikend kosilo",
+      "kaj je za vikend",
+      "ponudba za vikend"
+    ],
+    "answer": "Naš meni se spreminja glede na sezono in svežo ponudbo.\n\nVikend kosilo (sob-ned, 12:00–15:00): juha, glavna jed s prilogami, sladica. Cena: 36 €/osebo (otroci 4–12 let -50%).\n\nČe želite točen sezonski izbor (npr. zimska/pomladna srajčka), mi povejte."
+  },
+  {
+    "key": "zivali_kmetija",
+    "priority": 75,
+    "triggers": [
+      "katere živali",
+      "kakšne živali",
+      "živali na kmetiji",
+      "zivali na kmetiji",
+      "otroci vidijo živali",
+      "lahko otroci vidijo živali",
+      "ali lahko otroci vidijo živali",
+      "imate živali",
+      "imate zivali"
+    ],
+    "answer": "Na kmetiji imamo živali, ki jih lahko spoznate:\n\n🐴 ponija Marsija in Malajko\n🐷 pujsko Pepo\n🐑 ovna Čarlija\n🐕 psičko Luno\n🐱 mucke\n\nPoleg tega skrbimo tudi za govedo in kokoši."
+  },
+  {
+    "key": "konji",
+    "priority": 84,
+    "triggers": [
+      "konj",
+      "konja",
+      "konje",
+      "konji",
+      "imate konje",
+      "imate konja"
+    ],
+    "answer": "Pravih konj nimamo, imamo pa ponija Marsija in Malajko, ki ju otroci lahko spoznajo."
+  },
+  {
+    "key": "jahanje",
+    "priority": 86,
+    "triggers": [
+      "jahanje",
+      "jahati",
+      "jahamo",
+      "jahamo konja",
+      "jahamo ponija",
+      "jahanje s ponijem",
+      "jahanje ponija",
+      "jahati ponija",
+      "poni",
+      "ponij",
+      "ponija",
+      "ponijem"
+    ],
+    "answer": "Na naši domačiji je za otroke na voljo jahanje s ponijem Marsijem. En krog stane 5,00 € (po ceniku) in ga izvajamo ob lepem vremenu ter če je ponij dobre volje. Ob rezervaciji prosim omenite, da želite vključiti jahanje, da se dogovorimo za točen termin.\n\nVeč: https://kmetijapodgoro.si/cenik/ponij"
+  },
+  {
+    "key": "zajcki",
+    "priority": 88,
+    "triggers": [
+      "božamo zajčke",
+      "bozamo zajcke",
+      "zajčke",
+      "zajcki",
+      "božanje zajčkov",
+      "bozanje zajckov"
+    ],
+    "answer": "Na kmetiji imamo tudi zajčke. 🐰\n\nOb obisku jih lahko vidite in pobožate, če so mirni in sproščeni – včasih pa raje počivajo. Najbolje je vprašati ob prihodu."
+  },
+  {
+    "key": "vina",
+    "priority": 82,
+    "triggers": [
+      "kakšna vina",
+      "katera vina",
+      "vinska karta",
+      "vinska ponudba",
+      "vina imate",
+      "vinsko spremljavo",
+      "vinska spremljava",
+      "lokalna vina",
+      "ali imate lokalna vina",
+      "vinsko karto",
+      "vinsko karto?",
+      "vinska karto"
+    ],
+    "answer": "Sodelujemo z izbranimi lokalnimi vinarji (Greif, Frešer, Skuber …) in imamo bogato vinsko ponudbo.\n\nCeloten seznam: https://kmetijapodgoro.si/de/vina/"
+  },
+  {
+    "key": "nakup_izdelkov",
+    "priority": 80,
+    "triggers": [
+      "kako naročim izdelke",
+      "naročilo izdelkov",
+      "kako naročiti izdelke",
+      "naročilo preko spleta",
+      "spletna trgovina",
+      "kje kupim izdelke",
+      "ali lahko kupim izdelke preko spleta",
+      "kje lahko kupim vaše izdelke",
+      "kje kupim vaše izdelke"
+    ],
+    "answer": "Izdelke lahko naročite v spletni trgovini: https://kmetijapodgoro.si/katalog\n\nLahko pa jih kupite tudi ob obisku na kmetiji."
+  },
+  {
+    "key": "darilni_boni",
+    "priority": 82,
+    "triggers": [
+      "darilni bon",
+      "darilni boni",
+      "vrednostni bon",
+      "darilne bone",
+      "boni",
+      "darilne bon"
+    ],
+    "answer": "Darilni boni so na voljo v spletni trgovini (npr. 10 €, 20 €, 50 €).\n\nPrimer: https://kmetijapodgoro.si/izdelek/darilni-bon-10-eur/"
+  },
+  {
+    "key": "oddaljenost_maribor",
+    "priority": 70,
+    "triggers": [
+      "oddaljeni od maribora",
+      "oddaljenost od maribora",
+      "koliko je do maribora",
+      "koliko km do maribora",
+      "koliko kilometrov do maribora"
+    ],
+    "answer": "Natančno razdaljo in čas vožnje do Maribora najlažje preverite v Google Maps. Izhodišče: Gorska cesta 7, 2315 Zeleno Polje."
+  },
+  {
+    "key": "gps",
+    "priority": 70,
+    "triggers": [
+      "gps koordinate",
+      "koordinate za gps",
+      "gps"
+    ],
+    "answer": "Za navigacijo priporočamo Google Maps (Gorska cesta 7, 2315 Zeleno Polje). Če želite natančne GPS koordinate, nam pišite na info@kmetijapodgoro.si."
+  },
+  {
+    "key": "areh_pot",
+    "priority": 88,
+    "triggers": [
+      "areh",
+      "kako pridem do areha",
+      "pot do areha",
+      "kako do areha"
+    ],
+    "answer": "Od Domačije Kmetija Pod Goro (Gorska cesta 7, Zeleno Polje) je do Areha približno 30 minut vožnje.\n\nNajprej vozite po cesti Gorska vas, ki nato preide v Frajhajm, po nekaj kilometrih sledite oznakam in zavijete proti Arehu. Cesta vas nato vodi ob Lobnici in skozi gozd vse do vrha Pohorja. 🛣️ Pot je lepa in mirna, primerna za izlet; pozimi pa priporočamo zimsko opremo, ker zna biti cesta zasnežena. ❄️"
+  },
+  {
+    "key": "izleti_okolica",
+    "priority": 82,
+    "triggers": [
+      "kaj je v okolici",
+      "kakšen izlet priporočate",
+      "kaksen izlet priporocate",
+      "kam na izlet",
+      "izleti",
+      "izlet v bližini",
+      "izlet v blizini"
+    ],
+    "answer": "V okolici priporočamo: Botanični vrt TAL 2000 (15 min), Krajinski park Rački ribniki - Požeg (ptice, sprehodi), Zeleno Poljeski slap (12m), Grad Rače z Belo dvorano, turnokolesarsko pot na Pohorje. Za ljubitelje etnologije Vešnerjeva domačija v Planici.\n\nVeč: local://turistika/okolica"
+  },
+  {
+    "key": "race_pot",
+    "priority": 80,
+    "triggers": [
+      "rače",
+      "kako pridem v rače",
+      "kako do rač",
+      "kako do race"
+    ],
+    "answer": "Najbolje je, da pot do Rač preverite v Google Maps. Izhodišče: Gorska cesta 7, 2315 Zeleno Polje."
+  },
+  {
+    "key": "praznovanja_dogodki",
+    "priority": 86,
+    "triggers": [
+      "rojstni dan",
+      "rojstni dnevi",
+      "rojstne dneve",
+      "obletnica",
+      "obletnico",
+      "poroka",
+      "poroko",
+      "poroke",
+      "teambuilding",
+      "dogodek",
+      "posebna priložnost",
+      "praznovanje",
+      "poslovni sestanek",
+      "zunanji prostor"
+    ],
+    "answer": "Pri nas lahko organiziramo kosila za posebne priložnosti (rojstni dnevi, obletnice, poroke, teambuilding). Za posebne želje nam pišite na info@kmetijapodgoro.si."
+  },
+  {
+    "key": "kontakt",
+    "priority": 95,
+    "triggers": [
+      "telefon",
+      "telefonska številka",
+      "telefonska stevilka",
+      "številka",
+      "stevilka",
+      "mobitel",
+      "email",
+      "e-mail",
+      "epošta",
+      "e-pošta"
+    ],
+    "answer": "📞 Telefon: 02 700 12 34\n📱 Mobitel: 031 777 888\n📧 Email: info@kmetijapodgoro.si"
+  },
+  {
+    "key": "pogrebscina",
+    "priority": 80,
+    "triggers": [
+      "pogrebščina",
+      "pogrebscina",
+      "pogrebščino",
+      "pogreb"
+    ],
+    "answer": "Za pogrebščine se dogovorimo posebej. Prosimo, pišite na info@kmetijapodgoro.si ali pokličite 02 700 12 34."
+  },
+  {
+    "key": "piknik",
+    "priority": 84,
+    "triggers": [
+      "piknik",
+      "piknike"
+    ],
+    "answer": "Piknika oziroma zunanjega prostora za praznovanje ne nudimo."
+  },
+  {
+    "key": "posebni_meniji",
+    "priority": 84,
+    "triggers": [
+      "silvestrovo",
+      "božični meni",
+      "bozicni meni",
+      "valentinovo"
+    ],
+    "answer": "Ob posebnih priložnostih pripravimo posebne menije. Spremljajte naša družbena omrežja ali nam pišite na info@kmetijapodgoro.si."
+  },
+  {
+    "key": "najem_prostora",
+    "priority": 80,
+    "triggers": [
+      "najem prostora",
+      "najem",
+      "najamete prostor",
+      "koliko stane najem prostora"
+    ],
+    "answer": "Prostora ne dajemo v najem."
+  },
+  {
+    "key": "kapaciteta_jedilnice",
+    "priority": 85,
+    "triggers": [
+      "kapaciteta jedilnice",
+      "koliko ljudi lahko sprejmete",
+      "prostor za 30 oseb",
+      "koliko oseb sprejmete",
+      "notranja jedilnica",
+      "notranjo jedilnico",
+      "jedilnica"
+    ],
+    "answer": "V prvi jedilnici “Pri peči” je prostora za približno 15 oseb, v drugi “Pri vrtu” pa za okoli 35 obiskovalcev."
+  },
+  {
+    "key": "golf",
+    "priority": 90,
+    "triggers": [
+      "golf",
+      "golf igrišče",
+      "golf igrisce"
+    ],
+    "answer": "Golf igrišča nimamo, zato priporočamo, da najbližje lokacije preverite v Google Maps."
+  },
+  {
+    "key": "igrisce",
+    "priority": 78,
+    "triggers": [
+      "igrišče",
+      "igrala",
+      "igrisce",
+      "travnik",
+      "hišica"
+    ],
+    "answer": "Da, zunaj imamo igrala, manjši travnik in hišico za otroke."
+  },
+  {
+    "key": "otroci_aktivnosti",
+    "priority": 78,
+    "triggers": [
+      "kaj lahko otroci počnejo",
+      "kaj lahko otroci pocnejo",
+      "otroci počnejo",
+      "otroci pocnejo",
+      "kotiček za otroke",
+      "koticek za otroke",
+      "kotiček",
+      "koticek",
+      "primerno za 3-letnika",
+      "primerno za 3 letnika",
+      "3-letnik",
+      "3 letnik"
+    ],
+    "answer": "Otroci lahko spoznajo živali, se igrajo na igrišču in travniku ter uživajo v naravi okoli domačije."
+  },
+  {
+    "key": "malcki_varno",
+    "priority": 74,
+    "triggers": [
+      "varno za malčke",
+      "varno za malcke",
+      "malčki",
+      "malcki",
+      "dojenčki",
+      "dojencki"
+    ],
+    "answer": "Okolica je podeželska in naravna, zato priporočamo, da so najmlajši ves čas pod nadzorom odraslih."
+  },
+  {
+    "key": "dez_vreme",
+    "priority": 70,
+    "triggers": [
+      "kaj počnemo če dežuje",
+      "kaj pocnemo ce dezjuje",
+      "če dežuje",
+      "ce dezjuje",
+      "slabo vreme"
+    ],
+    "answer": "V primeru slabega vremena se zadržujemo v notranjih jedilnicah, za dodatne ideje pa nas vprašajte ob prihodu."
+  },
+  {
+    "key": "sezona_obisk",
+    "priority": 70,
+    "triggers": [
+      "najboljši čas za obisk",
+      "najboljsi cas za obisk",
+      "katera sezona je najlepša",
+      "katera sezona je najlepsa",
+      "najlepša sezona",
+      "najlepsa sezona"
+    ],
+    "answer": "Vsaka sezona ima svoj čar. Spomladi in poleti je največ dogajanja zunaj, jeseni pa je okolica najlepša v barvah."
+  },
+  {
+    "key": "jesen",
+    "priority": 70,
+    "triggers": [
+      "jeseni",
+      "kako je jeseni",
+      "jesen"
+    ],
+    "answer": "Jeseni je okolica še posebej lepa zaradi barv. Dnevi so lahko hladnejši, zato priporočamo toplejša oblačila."
+  },
+  {
+    "key": "primerna_otroke",
+    "priority": 80,
+    "triggers": [
+      "primerna za otroke",
+      "primerno za otroke",
+      "kmetija primerna za otroke"
+    ],
+    "answer": "Da, kmetija je primerna za otroke. Lahko spoznajo živali, se igrajo na igrišču in preživijo čas v naravi."
+  },
+  {
+    "key": "dojencki",
+    "priority": 70,
+    "triggers": [
+      "dojenčki",
+      "dojencke",
+      "dojenčke",
+      "dojenčkom",
+      "dojencka"
+    ],
+    "answer": "Za dojenčke nimamo posebnega menija, lahko pa se prilagodimo po dogovoru. Posteljico lahko uredimo, prosimo sporočite vnaprej."
+  },
+  {
+    "key": "otroski_meni",
+    "priority": 78,
+    "triggers": [
+      "otroški meni",
+      "otroski meni"
+    ],
+    "answer": "Otroškega menija posebej ne pripravljamo."
+  },
+  {
+    "key": "otroski_stolcek_previjalna",
+    "priority": 78,
+    "triggers": [
+      "otroški stol",
+      "otroški stolček",
+      "previjalna miza",
+      "previjalno"
+    ],
+    "answer": "Otroški stolček in previjalno mizo lahko uredimo – prosimo, da sporočite vnaprej."
+  },
+  {
+    "key": "posteljica_dojencek",
+    "priority": 78,
+    "triggers": [
+      "posteljica za dojenčka",
+      "posteljica",
+      "dojenček",
+      "dojenčka"
+    ],
+    "answer": "Posteljico za dojenčka lahko uredimo – prosimo, da sporočite vnaprej."
+  },
+  {
+    "key": "otroske_animacije",
+    "priority": 70,
+    "triggers": [
+      "animacije",
+      "animacija za otroke",
+      "otroške animacije"
+    ],
+    "answer": "Velikokrat Lara poskrbi za animacijo otrok, predvsem z živalmi."
+  },
+  {
+    "key": "otroski_popusti_kosilo",
+    "priority": 80,
+    "triggers": [
+      "do koliko let je otrok zastonj",
+      "koliko stane otrok",
+      "otroci popust",
+      "otroški popust",
+      "otroci 4-12"
+    ],
+    "answer": "Za kosilo: odrasli 36 EUR, otroci 4–12 let imajo 50 % popust. Prosimo, najavite morebitna odstopanja od mesnega menija (vegi, vegansko, brez glutena, mleka, jajc)."
+  },
+  {
+    "key": "notranja_jedilnica",
+    "priority": 78,
+    "triggers": [
+      "notranja jedilnica",
+      "notranja jedilnica?",
+      "notranji prostor"
+    ],
+    "answer": "Seveda, imamo notranji jedilnici. Pri peči je približno 15 mest, Pri vrtu pa okoli 35."
+  },
+  {
+    "key": "terasa_pokrita",
+    "priority": 75,
+    "triggers": [
+      "terasa pokrita",
+      "pokrita terasa"
+    ],
+    "answer": "Terasa je pokrita, vendar zunaj strežemo samo ob vremensko ugodnih razmerah."
+  },
+  {
+    "key": "odprti_pozimi",
+    "priority": 75,
+    "triggers": [
+      "odprti pozimi",
+      "pozimi odprti"
+    ],
+    "answer": "Pozimi strežemo v notranjih jedilnicah."
+  },
+  {
+    "key": "sneg_pozimi",
+    "priority": 70,
+    "triggers": [
+      "sneg pozimi",
+      "ali imate sneg pozimi",
+      "pozimi sneg",
+      "sneg"
+    ],
+    "answer": "Sneg je odvisen od vremena in sezone. Za aktualne razmere priporočamo vremensko napoved za območje Pohorja."
+  },
+  {
+    "key": "gretje",
+    "priority": 70,
+    "triggers": [
+      "gretje",
+      "ogrevanje"
+    ],
+    "answer": "Seveda, prostori so ogrevani."
+  },
+  {
+    "key": "klima_sobe_poleti",
+    "priority": 78,
+    "triggers": [
+      "poleti vroče v sobah",
+      "vroče v sobah",
+      "klima poleti"
+    ],
+    "answer": "V sobah imamo klimo."
+  },
+  {
+    "key": "avtobusi_avtodomi_asfalt",
+    "priority": 78,
+    "triggers": [
+      "avtobus",
+      "avtodomi",
+      "postajališče za avtodome",
+      "cesta asfaltirana",
+      "asfaltirana cesta"
+    ],
+    "answer": "Možen je parkirni prostor za avtobuse in avtodome. Do kmetije je asfaltirana cesta."
+  },
+  {
+    "key": "avtocesta_oddaljenost",
+    "priority": 78,
+    "triggers": [
+      "koliko je od avtoceste",
+      "oddaljenost od avtoceste"
+    ],
+    "answer": "Od avtoceste je približno 20 minut vožnje po cesti."
+  },
+  {
+    "key": "transfer_prevoz",
+    "priority": 70,
+    "triggers": [
+      "transfer",
+      "prevzem na postaji",
+      "pridete po nas",
+      "prevoz iz letališča"
+    ],
+    "answer": "Organiziranega prevoza/prevzema ne nudimo."
+  },
+  {
+    "key": "motoristi",
+    "priority": 70,
+    "triggers": [
+      "motoristi",
+      "motorist",
+      "motoriste",
+      "primerno za motoriste",
+      "motor",
+      "motorji"
+    ],
+    "answer": "Dostop do kmetije je po asfaltirani cesti, parkiranje pa je na dvorišču."
+  },
+  {
+    "key": "oddaljenost_lj_celje",
+    "priority": 78,
+    "triggers": [
+      "koliko je ljubljana",
+      "koliko je do ljubljane",
+      "kako daleč je ljubljana",
+      "kako dalec je ljubljana",
+      "koliko je celje",
+      "koliko je do celja",
+      "kako daleč je celje",
+      "kako dalec je celje",
+      "koliko časa traja vožnja iz celja",
+      "koliko casa traja voznja iz celja",
+      "vožnja iz celja",
+      "voznja iz celja",
+      "oddaljenost ljubljana",
+      "oddaljenost celje"
+    ],
+    "answer": "Ljubljana je približno 100 km, Celje pa približno 50 km."
+  },
+  {
+    "key": "romanticna_soba",
+    "priority": 70,
+    "triggers": [
+      "romantična soba",
+      "romantično sobo",
+      "romanticna soba",
+      "romanticno sobo",
+      "soba s pogledom",
+      "sobo s pogledom",
+      "romantika",
+      "romantična",
+      "parček",
+      "parcek"
+    ],
+    "answer": "Vse sobe so urejene udobno in domače. Dve imata balkon, ena ga nima, vendar je največja. Vse sobe imajo kopalnico s tušem in so poimenovane po naših treh otrocih: Niki, Lari in Tinetu."
+  },
+  {
+    "key": "wellness",
+    "priority": 70,
+    "triggers": [
+      "masaže",
+      "masaža",
+      "masažo",
+      "masaza",
+      "masaze",
+      "jacuzzi",
+      "jacuzzija",
+      "savna",
+      "savno",
+      "savne",
+      "wellness"
+    ],
+    "answer": "Masaž, jacuzzija ali savne nimamo."
+  },
+  {
+    "key": "presenecenje_sampanjec",
+    "priority": 70,
+    "triggers": [
+      "šampanjec",
+      "presenečenje",
+      "presenecenje"
+    ],
+    "answer": "Za posebne želje (npr. šampanjec ali presenečenje) nas povprašajte ob rezervaciji ali pišite na info@kmetijapodgoro.si."
+  },
+  {
+    "key": "medeni_tedni",
+    "priority": 70,
+    "triggers": [
+      "medeni tedni",
+      "medene tedne",
+      "honeymoon"
+    ],
+    "answer": "Če načrtujete medeni teden, nam pišite na info@kmetijapodgoro.si, da skupaj najdemo najboljšo možnost."
+  },
+  {
+    "key": "pohodne_poti",
+    "priority": 72,
+    "triggers": [
+      "pohodne poti",
+      "kje lahko hodimo",
+      "pohod",
+      "pohodi",
+      "pohodništvo",
+      "pohorje poti"
+    ],
+    "answer": "V bližini je veliko izletniških in pohodniških poti po Pohorju. Za ideje poglejte naš seznam izletov ali vprašajte ob obisku."
+  },
+  {
+    "key": "smucanje",
+    "priority": 72,
+    "triggers": [
+      "smučanje",
+      "smucanje",
+      "najbližje smučišče",
+      "smučišče",
+      "smucisce"
+    ],
+    "answer": "Najbližji smučišči sta Mariborsko Pohorje in Areh."
+  },
+  {
+    "key": "kolesa",
+    "priority": 72,
+    "triggers": [
+      "kolesa",
+      "kolo",
+      "kolesom",
+      "s kolesom",
+      "e-kolesa",
+      "ekolesa",
+      "izposoja koles",
+      "kolesarji",
+      "kolesarje"
+    ],
+    "answer": "Kolesa (tudi e-kolesa) so na voljo. Cena in termin sta po dogovoru – prosimo, povprašajte ob rezervaciji."
+  },
+  {
+    "key": "plavanje",
+    "priority": 70,
+    "triggers": [
+      "plavanje",
+      "plavam",
+      "plavamo",
+      "bazen",
+      "jezero",
+      "ribolov"
+    ],
+    "answer": "Bazen nimamo. Za kopanje priporočamo okolico Ptuja; drugih vodnih možnosti v bližini ne ponujamo."
+  },
+  {
+    "key": "nordijska_hoja_ture",
+    "priority": 70,
+    "triggers": [
+      "nordijska hoja",
+      "nordijsko hojo",
+      "vodene ture",
+      "vodene ture?",
+      "vodenih tur"
+    ],
+    "answer": "Vodenih tur ne organiziramo. Pohorje pa ponuja veliko lepih poti za sprehode in nordijsko hojo."
+  },
+  {
+    "key": "tv_soba",
+    "priority": 70,
+    "triggers": [
+      "televizija v sobi",
+      "tv v sobi",
+      "tv",
+      "televizija",
+      "televizijo"
+    ],
+    "answer": "Da, v sobah je satelitska televizija."
+  },
+  {
+    "key": "wifi_hitrost",
+    "priority": 70,
+    "triggers": [
+      "wifi hiter",
+      "hiter wifi",
+      "signal wifi"
+    ],
+    "answer": "Wi‑Fi je na voljo, povezava je praviloma dovolj dobra za običajno uporabo."
+  },
+  {
+    "key": "netflix",
+    "priority": 70,
+    "triggers": [
+      "netflix"
+    ],
+    "answer": "Netflixa nimamo."
+  },
+  {
+    "key": "prostor_delo_tiskanje",
+    "priority": 70,
+    "triggers": [
+      "prostor za delo",
+      "delam od doma",
+      "tiskanje",
+      "tiskalnik"
+    ],
+    "answer": "Namenskega prostora za delo ali tiskanja praviloma ne nudimo."
+  },
+  {
+    "key": "signal",
+    "priority": 70,
+    "triggers": [
+      "signal",
+      "mobilni signal"
+    ],
+    "answer": "Signal na Pohorju zna biti spremenljiv – včasih dober, včasih slab."
+  },
+  {
+    "key": "polnilec_telefon",
+    "priority": 70,
+    "triggers": [
+      "polnilec za telefon",
+      "polnilca za telefon",
+      "polnilec"
+    ],
+    "answer": "Polnilca za telefon nimamo na voljo."
+  },
+  {
+    "key": "polnilnica_ev",
+    "priority": 70,
+    "triggers": [
+      "polnilnica",
+      "polnilnica za ev",
+      "polnilnico",
+      "ev polnilnica",
+      "polnilnica ev",
+      "električni avto",
+      "elektricni avto",
+      "polnjenje avta"
+    ],
+    "answer": "Polnilnice za električna vozila nimamo."
+  },
+  {
+    "key": "posebne_prehrane",
+    "priority": 70,
+    "triggers": [
+      "halal",
+      "košer",
+      "koser",
+      "diabetik",
+      "diabetike",
+      "alergičen na oreščke",
+      "alergicna na orescke",
+      "oreščke",
+      "orescke",
+      "brez laktoze",
+      "laktoza"
+    ],
+    "answer": "Posebne prehrane (halal, košer, diabetična, brez laktoze ipd.) lahko uredimo po dogovoru. Prosimo, sporočite ob rezervaciji ali na info@kmetijapodgoro.si."
+  },
+  {
+    "key": "pijace_osnovno",
+    "priority": 70,
+    "triggers": [
+      "brezalkoholna pijača",
+      "brezalkoholne pijače",
+      "pivo",
+      "sokovi",
+      "sokove",
+      "sok",
+      "kava",
+      "kavo",
+      "čaj",
+      "caj",
+      "brezalkoholno"
+    ],
+    "answer": "Da, na voljo imamo brezalkoholne pijače, pivo, sokove, kavo in čaj."
+  }
+]

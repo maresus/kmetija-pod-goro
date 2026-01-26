@@ -1,0 +1,63 @@
+SpoznajAI — vsebina za one-page
+
+NAVIGACIJA
+- Storitve
+- Primeri
+- Proces
+- Mnenja
+- Kontakt
+
+HERO
+Tagline: AI strategija • avtomatizacija • prototipi
+Naslov: Umetna inteligenca za pogumne ekipe.
+Podnaslov: Prehiti trg, ne le konkurence.
+Opis: SpoznajAI oblikuje rešitve, ki pospešijo odločanje, avtomatizirajo rutino in odprejo nove kanale rasti.
+Chipi: Vision Ops • Agent Mesh • Signal IQ
+CTA: Povej cilj
+Sekundarni CTA: Kaj vključuje
+
+HERO KARTICA
+Naslov: Od ideje do misije v 30 dneh
+Opis: Skupaj definiramo cilje, zgradimo prototip in ga spremenimo v rešitev, ki jo ekipa takoj uporablja.
+Statistike:
+- +47% Hitrejša obdelava povpraševanj
+- 3x Bolj jasna poročila za vodstvo
+- 24/7 Avtonomna podpora
+
+STORITVE
+Naslov: Storitve za ekipe, ki ne stojijo pri miru
+Opis: Od discovery delavnic do gradnje rešitev, ki potujejo z vami v prihodnost.
+Kartice:
+1) AI strategija — Identifikacija procesov z največjim ROI in jasen načrt uvajanja AI v organizacijo.
+2) Avtomatizacija — Povezava CRM, e-pošte, podpore in prodaje v enoten, avtomatiziran tok.
+3) AI asistent — Prilagojeni asistenti za interno znanje, onboarding ali podporo strankam.
+4) Analitika — Pametne nadzorne plošče in povzetki za upravljanje, prodajo in marketing.
+
+PRIMERI UPORABE
+Naslov: Operacije, ki premikajo meje
+Opis: Močna konkurenca zahteva pogumne skoke. AI pomaga ekipi delati hitreje, natančneje in bolj drzno.
+Kartice:
+1) Prodaja — Povzetki klicev, samodejni follow-upi in prioritizacija leadov z največjo verjetnostjo za nakup.
+2) Podpora — Samodejni odgovori na pogosta vprašanja, triaža in predlogi za agente.
+3) Marketing — Personalizirana vsebina, optimizirane kampanje in segmentacija občinstev.
+
+PROCES
+Naslov: Proces kot ekspedicija
+Opis: Vsaka faza ima jasne cilje, merljive rezultate in naslednji korak.
+Koraki:
+1) Discovery kamp — Analiza procesov, izbor prioritet in definicija uspeha.
+2) Prototip v 10 dneh — Hitro testiranje, validacija podatkov in prilagoditve.
+3) Pilot + rollout — Integracija v realno okolje, izobraževanje ekipe in merjenje KPI.
+
+MNENJA
+Naslov: Posadke pravijo
+Izjave:
+- “Ekipa SpoznajAI nam je v 3 tednih zgradila asistenta, ki je razbremenil prodajo in takoj dvignil odzivnost.” — Petra, vodja rasti
+- “Z avtomatizacijo podpore smo prihranili 15 ur tedensko in stranke so bolj zadovoljne.” — Matej, vodja operacij
+
+KONTAKT
+Naslov: Pripravljeni na AI pospešek?
+Opis: Povej cilj in pripravimo načrt. Prvi posvet je brezplačen.
+Email: hello@spoznajai.si
+Telefon: +386 40 123 456
+CTA: Pošlji povpraševanje

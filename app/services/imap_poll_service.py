@@ -20,6 +20,7 @@ IMAP_USER = os.getenv("IMAP_USER", "").strip()
 IMAP_PASSWORD = os.getenv("IMAP_PASSWORD", "").strip()
 IMAP_SSL = os.getenv("IMAP_SSL", "").strip().lower() in {"1", "true", "yes"}
 IMAP_POLL_INTERVAL = int(os.getenv("IMAP_POLL_INTERVAL", "300"))
+SUBJECT_PREFIX = os.getenv("SUBJECT_PREFIX", "").strip()
 
 RESERVATION_ID_RE = re.compile(r"rezervacija\s*#(\d+)", re.IGNORECASE)
 
@@ -58,6 +59,15 @@ def _extract_text(msg) -> str:
     payload = msg.get_payload(decode=True) or b""
     charset = msg.get_content_charset() or "utf-8"
     return payload.decode(charset, errors="ignore").strip()
+
+
+def _strip_reply_prefixes(subject: str) -> str:
+    cleaned = subject or ""
+    while True:
+        updated = re.sub(r"^(re|fw|fwd)\\s*:\\s*", "", cleaned, flags=re.IGNORECASE)
+        if updated == cleaned:
+            return updated.strip()
+        cleaned = updated
 
 
 def _match_reservation_id(subject: str, body: str = "") -> Optional[int]:
@@ -155,6 +165,10 @@ def _process_message(
 ) -> Tuple[bool, Optional[int]]:
     msg = message_from_bytes(msg_bytes)
     subject = _decode_header(msg.get("Subject", ""))
+    if SUBJECT_PREFIX:
+        normalized = _strip_reply_prefixes(subject)
+        if not normalized.startswith(SUBJECT_PREFIX):
+            return False, None
     message_id = _decode_header(msg.get("Message-ID", "")) or f"imap-uid-{uid}"
     from_email = _decode_header(msg.get("From", ""))
     to_email = _decode_header(msg.get("To", ""))

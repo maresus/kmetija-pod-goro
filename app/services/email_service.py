@@ -42,6 +42,7 @@ ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "info@kmetijapodgoro.si")
 SMTP_SSL = os.getenv("SMTP_SSL", "").strip().lower() in {"1", "true", "yes"}
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
 RESEND_FROM_EMAIL = os.getenv("RESEND_FROM_EMAIL", "onboarding@resend.dev")
+SUBJECT_PREFIX = os.getenv("SUBJECT_PREFIX", "").strip()
 
 # Brand barve (enake kot WordPress)
 BRAND_COLOR = "#7b5e3b"
@@ -321,6 +322,13 @@ def _send_email(to: str, subject: str, html_body: str) -> bool:
     POMEMBNO: Ta funkcija trenutno NI AKTIVNA.
     Za aktivacijo nastavi SMTP credentials v .env
     """
+    if SUBJECT_PREFIX:
+        prefix = SUBJECT_PREFIX
+        if not subject:
+            subject = prefix
+        elif not subject.startswith(prefix):
+            subject = f"{prefix} {subject}"
+
     if RESEND_API_KEY:
         try:
             resend.api_key = RESEND_API_KEY

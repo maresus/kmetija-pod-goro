@@ -1642,7 +1642,7 @@ def get_last_reservation_user_message() -> str:
 
 def set_reservation_type_from_text(state: dict, text: str) -> None:
     lowered = text.lower()
-    if any(token in lowered for token in ["mizo", "miza", "table"]):
+    if any(token in lowered for token in ["mizo", "miza", "table", "kosilo", "kosila", "lunch"]):
         state["type"] = "table"
     elif any(token in lowered for token in ["sobo", "soba", "preno", "room", "zimmer"]):
         state["type"] = "room"

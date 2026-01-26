@@ -2,301 +2,384 @@
 <html lang="sl">
 <head>
   <meta charset="UTF-8" />
-  <title>Kmetija Pod Goro AI – Playground</title>
+  <title>Kmetija Pod Goro – Pogovor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Space+Grotesk:wght@400;500;600&display=swap');
+
     :root {
-      --bg: #f6f0e9;
-      --text: #2f302b;
-      --cream: #fffaf3;
-      --green: #2d3e2f;
-      --accent: #c19a6b;
-      --line: #e4dfd7;
-      --shadow: 0 12px 35px rgba(0,0,0,0.08);
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      --bg: #edf0e8;
+      --bg-2: #f3f6ef;
+      --ink: #2a2f2a;
+      --muted: #6a7268;
+      --pine: #2f4a3a;
+      --accent: #c28c52;
+      --paper: #fbf9f4;
+      --line: #dfe6d6;
+      --shadow: 0 16px 36px rgba(22, 28, 18, 0.14);
+      --radius: 22px;
     }
+
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      padding: 0;
-      background: var(--bg);
+      font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(160deg, #f2f5ee 0%, #e6eadf 45%, #e4e8dd 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    .app {
-      max-width: 900px;
-      margin: 24px auto;
-      padding: 16px;
+    body::before,
+    body::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      opacity: 0.35;
+      z-index: 0;
     }
 
-    .card {
-      background: var(--cream);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+    body::before {
+      width: 360px;
+      height: 360px;
+      background: #bcd0c2;
+      top: -120px;
+      left: -80px;
+    }
+
+    body::after {
+      width: 500px;
+      height: 500px;
+      background: #e1c7a5;
+      bottom: -180px;
+      right: -120px;
+    }
+
+    .shell {
+      max-width: 980px;
+      margin: 28px auto 56px;
+      padding: 0 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .frame {
+      background: rgba(255,255,255,0.8);
       border: 1px solid var(--line);
-      backdrop-filter: blur(6px);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 20px 22px 18px;
+      backdrop-filter: blur(10px);
+      animation: lift 0.6s ease;
     }
 
-    .header {
+    @keyframes lift {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .topbar {
       display: flex;
+      align-items: center;
       justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      background: var(--paper);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
       align-items: center;
       gap: 12px;
-      flex-wrap: wrap;
-      background: rgba(255,255,255,0.6);
-      padding: 10px 12px;
+    }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
       border-radius: 16px;
-      border: 1px solid var(--line);
-      backdrop-filter: blur(10px);
-    }
-
-    .avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=200&q=60') center/cover no-repeat;
+      background: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=220&q=60') center/cover no-repeat;
       border: 2px solid #fff;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
     }
 
-    .title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--green);
+    .brand h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      margin: 0;
+      color: var(--pine);
     }
 
-    .subtitle {
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
       font-size: 0.95rem;
-      color: #6b5f4e;
     }
 
-    .badge {
-      font-size: 0.8rem;
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .presence {
+      font-size: 0.85rem;
       padding: 6px 12px;
       border-radius: 999px;
-      background: #e5f3ea;
-      color: var(--green);
-      border: 1px solid #c9e2d1;
+      background: #e1f0e1;
+      border: 1px solid #c3d9c4;
+      color: var(--pine);
       white-space: nowrap;
     }
 
-    .messages {
-      border-radius: 18px;
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--pine);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .btn.secondary {
       background: #fff;
-      padding: 14px;
-      max-height: 420px;
+      color: var(--pine);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(0,0,0,0.12);
+    }
+
+    .intro {
+      margin-top: 18px;
+      background: var(--paper);
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      display: grid;
+      gap: 6px;
+    }
+
+    .intro h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      margin: 0;
+      color: var(--pine);
+    }
+
+    .intro p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .messages {
+      background: #fff;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      padding: 16px;
+      max-height: 440px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
+      gap: 12px;
     }
 
     .msg {
-      max-width: 80%;
-      border-radius: 20px;
-      padding: 10px 14px;
+      max-width: 82%;
+      padding: 12px 16px;
+      border-radius: 18px;
       font-size: 0.95rem;
-      line-height: 1.5;
+      line-height: 1.55;
       white-space: pre-wrap;
-      word-wrap: break-word;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-      border: 1px solid #f1ebe2;
+      word-break: break-word;
+      border: 1px solid #e6efe0;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.06);
     }
 
     .msg.user {
       margin-left: auto;
-      background: #eaf2e9;
-      color: var(--text);
+      background: #e8f0e5;
       border-bottom-right-radius: 6px;
     }
 
     .msg.bot {
       margin-right: auto;
-      background: #fdf6ec;
-      color: var(--text);
+      background: #f4efe5;
       border-bottom-left-radius: 6px;
     }
 
     .msg.meta {
       margin: 0 auto;
       background: transparent;
-      color: #9ca3af;
+      border: none;
+      box-shadow: none;
+      color: #9aa19a;
       font-size: 0.75rem;
       padding: 0;
-      box-shadow: none;
-      border: none;
     }
 
-    .input-row {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
+    .composer {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: grid;
+      gap: 12px;
     }
 
-    .input-main {
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-    }
-
-    textarea {
-      flex: 1;
-      min-height: 70px;
-      max-height: 200px;
+    .composer textarea {
+      width: 100%;
+      min-height: 84px;
+      max-height: 220px;
       resize: vertical;
       border-radius: 16px;
       border: 1px solid var(--line);
-      padding: 10px 12px;
+      padding: 12px 14px;
       font-family: inherit;
       font-size: 0.95rem;
       outline: none;
-      box-sizing: border-box;
       background: #fff;
     }
 
-    textarea:focus {
+    .composer textarea:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 1px #c19a6b40;
+      box-shadow: 0 0 0 2px rgba(194, 140, 82, 0.2);
     }
 
-    button {
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      padding: 10px 18px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: var(--green);
-      color: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: default;
-    }
-
-    .hint-row {
+    .composer-actions {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      font-size: 0.75rem;
-      color: #6b5f4e;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    .quick-prompts {
+    .chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 8px;
     }
 
     .chip {
       padding: 6px 12px;
       border-radius: 999px;
-      background: #fff;
-      font-size: 0.8rem;
-      cursor: pointer;
       border: 1px solid var(--line);
+      background: #fff;
+      font-size: 0.82rem;
+      cursor: pointer;
       transition: all 0.15s ease;
     }
 
     .chip:hover {
       border-color: var(--accent);
-      background: #fff5e6;
-      color: var(--text);
+      color: var(--pine);
+      background: #fff3e2;
     }
 
     .status {
-      font-size: 0.8rem;
-      color: #6b5f4e;
-      text-align: right;
+      font-size: 0.78rem;
+      color: #7c857c;
+    }
+
+    @media (min-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr 340px;
+      }
+
+      .composer {
+        position: sticky;
+        bottom: 24px;
+      }
     }
 
     @media (max-width: 640px) {
-      .card {
-        padding: 14px;
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
-      .title {
-        font-size: 1.05rem;
-      }
-
-      .messages {
-        max-height: 320px;
+      .brand h1 {
+        font-size: 1.25rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="card">
-      <div class="header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <div class="avatar"></div>
+  <div class="shell">
+    <div class="frame">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-mark"></div>
           <div>
-            <div class="title">Kmetija Pod Goro</div>
-            <div class="subtitle">
-              Pozdravljeni pri Kmetiji Pod Goro. Lahko nas kadarkoli, karkoli vprašate. 💚
-            </div>
+            <h1>Kmetija Pod Goro</h1>
+            <p>Jasen odgovor, prijazen ton in brez nepotrebnih ovinkov.</p>
           </div>
         </div>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <button id="newSessionBtn" class="chip" style="cursor:pointer;">Nova seja</button>
-          <div class="badge">Maja · prisotna</div>
+        <div class="top-actions">
+          <button id="newSessionBtn" class="btn secondary">Nova seja</button>
+          <div class="presence">Maja · prisotna</div>
         </div>
       </div>
 
-      <div id="messages" class="messages"></div>
+      <div class="intro">
+        <h2>Dobrodošli na Kmetiji Pod Goro</h2>
+        <p>Vprašajte o sobah, mizi, izletih ali domačih izdelkih. Odgovorim kratko in uporabno.</p>
+      </div>
 
-      <div class="input-row">
-        <div class="input-main">
+      <div class="grid">
+        <div id="messages" class="messages"></div>
+
+        <div class="composer">
           <textarea
             id="input"
             placeholder="Napiši vprašanje ali npr. 'Rad bi rezerviral sobo za vikend.'"
           ></textarea>
-          <button id="sendBtn">
-            Pošlji
-          </button>
-        </div>
-        <div class="hint-row">
-          <div class="quick-prompts">
-            <span class="chip" data-prompt="Kaj ponujate na kmetiji?">Naša ponudba</span>
-            <span class="chip" data-prompt="Kaj prodajate v spletni trgovini?">Trgovina</span>
-            <span class="chip" data-prompt="Rad bi rezerviral sobo.">Rezervacija sobe</span>
-            <span class="chip" data-prompt="Rad bi rezerviral mizo.">Rezervacija mize</span>
+          <div class="composer-actions">
+            <div class="chips">
+              <span class="chip" data-prompt="Kaj ponujate na kmetiji?">Naša ponudba</span>
+              <span class="chip" data-prompt="Kaj prodajate v spletni trgovini?">Trgovina</span>
+              <span class="chip" data-prompt="Rad bi rezerviral sobo.">Rezervacija sobe</span>
+              <span class="chip" data-prompt="Rad bi rezerviral mizo.">Rezervacija mize</span>
+            </div>
+            <button id="sendBtn" class="btn">Pošlji</button>
           </div>
-          <div class="status" id="status">
-            Enter = pošlji, Shift+Enter = nova vrstica
-          </div>
+          <div class="status" id="status">Enter = pošlji, Shift+Enter = nova vrstica</div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const apiUrl = "/chat/stream"; // isti host, isti port
+    const apiUrl = "/chat/stream";
     const sessionKey = "chat_session_id";
     let sessionId = localStorage.getItem(sessionKey);
     if (!sessionId) {
       sessionId = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now());
       localStorage.setItem(sessionKey, sessionId);
     }
+
     const messagesEl = document.getElementById("messages");
     const inputEl = document.getElementById("input");
     const sendBtn = document.getElementById("sendBtn");
@@ -319,13 +402,13 @@
     function renderWelcome() {
       messagesEl.innerHTML = `
         <div class="msg bot">
-          Pozdravljeni pri Domačiji Kmetija Pod Goro! 😊
+          Pozdravljeni pri Kmetiji Pod Goro! 😊
           <br /><br />
           Lahko pomagam z vprašanji o sobah, mizi za kosilo, izletih ali naših domačih izdelkih.
           <br /><br />
           Poskusite:
           <br />• "Kaj ponujate za vikend kosila?"
-          <br />• "Imate suho salamo ali pohorsko bunko?"
+          <br />• "Imate suho salamo ali domačo bunko?"
           <br />• "Rad bi rezerviral sobo za vikend."
         </div>
       `;
@@ -356,9 +439,7 @@
       try {
         const res = await fetch(apiUrl, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: text, session_id: sessionId })
         });
 

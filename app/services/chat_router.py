@@ -477,6 +477,7 @@ UNKNOWN_RESPONSES = [
     "Za to nimam podatka.",
     "Nimam informacije o tem.",
 ]
+SHOP_URL = os.getenv("SHOP_URL", "https://kmetijapodgoro.si/katalog")
 
 reservation_service = ReservationService()
 

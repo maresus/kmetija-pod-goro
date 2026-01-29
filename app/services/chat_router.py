@@ -2278,6 +2278,19 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
             reply = f"Super! Naročilo lahko oddate tukaj: {SHOP_URL}"
             reply = maybe_translate(reply, detected_lang)
             return finalize(reply, "product_order_link", followup_flag=False)
+        # Če smo govorili o povpraševanju (teambuilding/poroka/catering), "da/ja" pomeni začetek inquiry.
+        if inquiry_state.get("step") is None:
+            last_bot_lower = last_bot_for_affirm.lower()
+            inquiry_ctx = (
+                is_inquiry_trigger(last_user_msg)
+                or any(tok in last_bot_lower for tok in ["povpraš", "ponudb", "teambuilding", "porok", "catering", "pogostitev"])
+            )
+            if inquiry_ctx:
+                inquiry_state["details"] = last_user_msg or payload.message
+                inquiry_state["step"] = "awaiting_deadline"
+                reply = "Super, zabeležim povpraševanje. Do kdaj bi to potrebovali? (datum/rok ali 'ni pomembno')"
+                reply = maybe_translate(reply, detected_lang)
+                return finalize(reply, "inquiry_start", followup_flag=False)
         availability_state = get_availability_state(state)
         if availability_state.get("active") and availability_state.get("can_reserve"):
             reply = start_reservation_from_availability(

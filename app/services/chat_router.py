@@ -1184,6 +1184,29 @@ def is_product_followup(message: str) -> bool:
         return True
     return False
 
+def strip_product_followup(text: str) -> str:
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if not lines:
+        return text
+    drop_starts = (
+        "želite",
+        "zelite",
+        "če želite",
+        "ce zelite",
+        "bi radi",
+        "bi želeli",
+        "bi želela",
+        "bi hotel",
+        "bi hotela",
+        "lahko vam",
+        "lahko ti",
+        "želiš",
+        "zelis",
+    )
+    while lines and (lines[-1].lower().startswith(drop_starts) or lines[-1].endswith("?")):
+        lines.pop()
+    return "\n".join(lines) if lines else text
+
 
 def extract_email(text: str) -> str:
     match = re.search(r"[\w\.-]+@[\w\.-]+\.\w+", text)
@@ -2248,6 +2271,12 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
         and llm_is_affirmative(payload.message, last_bot_for_affirm, detected_lang)
     )
     if state.get("step") is None and (is_affirmative(payload.message) or llm_affirm):
+        # Če smo govorili o izdelkih, "da/ja" pomeni naročilo -> daj povezavo do trgovine.
+        last_user_msg = get_last_user_message()
+        if last_bot_mentions_product_order(last_bot_for_affirm) or last_product_query or is_product_query(last_user_msg):
+            reply = f"Super! Naročilo lahko oddate tukaj: {SHOP_URL}"
+            reply = maybe_translate(reply, detected_lang)
+            return finalize(reply, "product_order_link", followup_flag=False)
         availability_state = get_availability_state(state)
         if availability_state.get("active") and availability_state.get("can_reserve"):
             reply = start_reservation_from_availability(
@@ -2433,9 +2462,10 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
             return reply_local
 
         def _product_resp(key: str) -> str:
-            reply_local = get_product_response(key)
+            reply_local = strip_product_followup(get_product_response(key))
             if is_bulk_order_request(payload.message):
                 reply_local = f"{reply_local}\n\nZa večja naročila nam pišite na info@kmetijapodgoro.si, da uskladimo količine in prevzem."
+            reply_local = f"{reply_local}\n\nTrgovina: {SHOP_URL}"
             return reply_local
 
         def _continuation(step_val: Optional[str], st: dict) -> str:
@@ -2468,6 +2498,12 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
             general_handler=None,
         )
         if reply_v2:
+            intent_v2 = decision.get("routing", {}).get("intent")
+            if intent_v2 == "PRODUCT":
+                last_product_query = payload.message
+                last_wine_query = None
+                last_info_query = None
+                last_menu_query = False
             return finalize(reply_v2, decision.get("routing", {}).get("intent", "v2"), followup_flag=False)
         # Če nič ne ujame, poskusi LLM/RAG odgovor
         llm_reply = _llm_answer(payload.message, conversation_history)
@@ -2513,9 +2549,10 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
     if state["step"] is None:
         product_key = detect_product_intent(payload.message)
         if product_key:
-            reply = get_product_response(product_key)
+            reply = strip_product_followup(get_product_response(product_key))
             if is_bulk_order_request(payload.message):
                 reply = f"{reply}\n\nZa večja naročila nam pišite na info@kmetijapodgoro.si, da uskladimo količine in prevzem."
+            reply = f"{reply}\n\nTrgovina: {SHOP_URL}"
             reply = maybe_translate(reply, detected_lang)
             return finalize(reply, "product_static", followup_flag=False)
 
@@ -2719,20 +2756,22 @@ Bi želeli rezervirati? Povejte mi datum in število oseb! 🗓️"""
         return finalize(reply, "menu")
 
     if intent == "product":
-        reply = answer_product_question(payload.message)
+        reply = strip_product_followup(answer_product_question(payload.message))
         last_product_query = payload.message
         last_wine_query = None
         last_info_query = None
         last_menu_query = False
+        reply = f"{reply}\n\nTrgovina: {SHOP_URL}"
         reply = maybe_translate(reply, detected_lang)
         return finalize(reply, "product")
 
     if intent == "product_followup":
-        reply = answer_product_question(payload.message)
+        reply = strip_product_followup(answer_product_question(payload.message))
         last_product_query = payload.message
         last_wine_query = None
         last_info_query = None
         last_menu_query = False
+        reply = f"{reply}\n\nTrgovina: {SHOP_URL}"
         reply = maybe_translate(reply, detected_lang)
         return finalize(reply, "product_followup")
 

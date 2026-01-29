@@ -730,7 +730,7 @@ def answer_product_question(message: str) -> str:
                 "Celoten izbor si lahko ogledate v spletni trgovini: https://kmetijapodgoro.si/kovacnikova-spletna-trgovina/."
             )
         if category == "liker":
-            return "Na voljo je domač borovničev liker (13 €) ter nekaj drugih domačih likerjev. Če želiš seznam, mi povej, ali raje pokličeš."
+            return "Na voljo je domač borovničev liker (13 €) ter nekaj drugih domačih likerjev."
         return (
             "Trenutno v bazi ne najdem konkretnih izdelkov za to vprašanje. "
             "Predlagam, da pobrskaš po spletni trgovini: https://kmetijapodgoro.si/kovacnikova-spletna-trgovina/."
@@ -758,7 +758,6 @@ def answer_product_question(message: str) -> str:
             lines.append(f"• **{title}** - {text}")
         lines.append(f"  👉 {c.url}")
 
-    lines.append("\nČe želite, vam povem še za kakšen izdelek!")
     return "\n".join(lines)
 
 

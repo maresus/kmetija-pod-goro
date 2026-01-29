@@ -152,6 +152,9 @@ PRODUCT_STEMS = {
     "dzem",
     "liker",
     "namaz",
+    "pesto",
+    "cemaz",
+    "čemaž",
     "bunk",
 }
 

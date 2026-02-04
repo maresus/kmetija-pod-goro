@@ -469,7 +469,7 @@ def _handle_room_reservation_impl(
     if step == "awaiting_confirmation":
         if message.strip().lower() in {"ne", "no"}:
             reset_reservation_state(state)
-            return "V redu, rezervacijo sem preklical. Kako vam lahko pomagam?"
+            return "V redu, rezervacijo sem prekinil. Kako vam lahko pomagam?"
         if is_affirmative(message):
             summary_state = reservation_state.copy()
             dinner_note = ""
@@ -658,7 +658,7 @@ def _handle_table_reservation_impl(
     if step == "awaiting_confirmation":
         if message.strip().lower() in {"ne", "no"}:
             reset_reservation_state(state)
-            return "V redu, rezervacijo sem preklical. Kako vam lahko pomagam?"
+            return "V redu, rezervacijo sem prekinil. Kako vam lahko pomagam?"
         if is_affirmative(message):
             summary_state = reservation_state.copy()
             res_id = reservation_service.create_reservation(
@@ -825,7 +825,7 @@ def handle_reservation_flow(
 
     if any(word in message.lower() for word in exit_keywords):
         reset_reservation_state(state)
-        return _tr("V redu, rezervacijo sem preklical. Kako vam lahko pomagam?")
+        return _tr("V redu, rezervacijo sem prekinil. Kako vam lahko pomagam?")
 
     if detect_reset_request(message):
         reset_reservation_state(state)

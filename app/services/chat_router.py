@@ -83,6 +83,9 @@ USE_ROUTER_V2 = True
 USE_FULL_KB_LLM = True
 INQUIRY_RECIPIENT = os.getenv("INQUIRY_RECIPIENT", "satlermarko@gmail.com")
 SHORT_MODE = os.getenv("SHORT_MODE", "true").strip().lower() in {"1", "true", "yes", "on"}
+STRICT_POLICY = os.getenv("STRICT_POLICY", "true").strip().lower() in {"1", "true", "yes", "on"}
+SHOP_BASE_URL = os.getenv("SHOP_BASE_URL", "https://kmetijapodgoro.si").rstrip("/")
+INFO_EMAIL = os.getenv("INFO_EMAIL", "info@kmetijapodgoro.si")
 _router_logger = logging.getLogger("router_v2")
 
 # ========== CENTRALIZIRANI INFO ODGOVORI (brez LLM!) ==========
@@ -1129,21 +1132,25 @@ def handle_info_during_booking(message: str, session_state: dict) -> Optional[st
     """
     Če je booking aktiven in uporabnik vpraša info ali produkt, odgovorimo + nadaljujemo flow.
     """
-    if not session_state or session_state.get("step") is None:
+    if not session_state or (session_state.get("step") is None and not session_state.get("type")):
         return None
 
     info_key = detect_info_intent(message)
     if info_key:
         info_response = get_info_response(info_key)
         continuation = get_booking_continuation(session_state.get("step"), session_state)
+        if STRICT_POLICY:
+            return info_response
         return f"{info_response}\n\n---\n\n📝 **Nadaljujemo z rezervacijo:**\n{continuation}"
 
     product_key = detect_product_intent(message)
     if product_key:
         product_response = get_product_response(product_key)
         if is_bulk_order_request(message):
-            product_response = f"{product_response}\n\nZa večja naročila nam pišite na info@kmetijapodgoro.si."
+            product_response = f"Za večja naročila pišite na {INFO_EMAIL}."
         continuation = get_booking_continuation(session_state.get("step"), session_state)
+        if STRICT_POLICY:
+            return product_response
         return f"{product_response}\n\n---\n\n📝 **Nadaljujemo z rezervacijo:**\n{continuation}"
 
     return None
@@ -1677,6 +1684,17 @@ def last_bot_mentions_reservation(last_bot: str) -> bool:
     return any(token in text for token in ["rezerv", "reserve", "booking", "zimmer", "room", "mizo", "table"])
 
 
+def last_bot_mentions_product_order(last_bot: str) -> bool:
+    text = last_bot.lower()
+    if "naroč" in text or "naroc" in text:
+        return True
+    if "trgovin" in text or "izdelek" in text or "katalog" in text:
+        return True
+    if any(stem in text for stem in PRODUCT_STEMS):
+        return True
+    return False
+
+
 def get_greeting_response() -> str:
     return random.choice(GREETINGS)
 
@@ -2205,6 +2223,8 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
         nonlocal needs_followup
         global conversation_history
         final_reply = reply_text
+        if STRICT_POLICY and any(k in intent_value for k in ["product", "info", "menu", "wine", "farm", "food"]):
+            final_reply = _sanitize_policy_response(final_reply)
         flag = followup_flag or needs_followup or is_unknown_response(final_reply)
         if flag:
             final_reply = get_unknown_response(detected_lang)
@@ -2222,6 +2242,25 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
             conversation_history = conversation_history[-12:]
         return ChatResponse(reply=final_reply)
 
+    def _sanitize_policy_response(text: str) -> str:
+        parts = re.split(r"(?<=[.!?])\s+", " ".join(text.split()))
+        filtered = []
+        for p in parts:
+            p_clean = p.strip()
+            if not p_clean:
+                continue
+            low = p_clean.lower()
+            if low.startswith("trgovina:"):
+                continue
+            if p_clean.endswith("?"):
+                continue
+            if any(tok in low for tok in ["ali želite", "želite", "vam lahko", "če potrebujete", "kar vprašajte", "povejte"]):
+                continue
+            filtered.append(p_clean)
+        if not filtered:
+            return "Trenutno nimam podatkov o tem."
+        return " ".join(filtered[:4]).rstrip(".") + "."
+
     if is_switch_topic_command(payload.message):
         reset_reservation_state(state)
         reset_inquiry_state(inquiry_state)
@@ -2229,6 +2268,44 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
         reply = "Seveda — zamenjamo temo. Kako vam lahko pomagam?"
         reply = maybe_translate(reply, detected_lang)
         return finalize(reply, "switch_topic", followup_flag=False)
+
+    if STRICT_POLICY:
+        info_during = handle_info_during_booking(payload.message, state)
+        if info_during:
+            reply = maybe_translate(info_during, detected_lang)
+            return finalize(reply, "info_during_reservation", followup_flag=False)
+
+        if state.get("step") is None and not state.get("type"):
+            info_key = detect_info_intent(payload.message)
+            if info_key:
+                info_reply = get_info_response(info_key)
+                info_reply = maybe_translate(info_reply, detected_lang)
+                return finalize(info_reply, "info_strict", followup_flag=False)
+
+            product_key = detect_product_intent(payload.message)
+            if product_key:
+                product_reply = get_product_response(product_key)
+                if is_bulk_order_request(payload.message):
+                    product_reply = f"Za večja naročila pišite na {INFO_EMAIL}."
+                product_reply = maybe_translate(product_reply, detected_lang)
+                return finalize(product_reply, "product_strict", followup_flag=False)
+
+    if STRICT_POLICY:
+        lowered = payload.message.lower()
+        if any(tok in lowered for tok in ["teambuilding", "poroka", "porok", "catering", "pogostitev", "dogodek"]):
+            reply = f"Za tovrstna povpraševanja pišite na {INFO_EMAIL}."
+            reply = maybe_translate(reply, detected_lang)
+            return finalize(reply, "inquiry_disabled", followup_flag=False)
+        if detect_product_intent(payload.message) == "gibanica_narocilo" and not any(
+            tok in lowered for tok in ["kaj je", "kaj pomeni"]
+        ):
+            reply = f"Tega izdelka ni v spletni trgovini. Pišite na {INFO_EMAIL}."
+            reply = maybe_translate(reply, detected_lang)
+            return finalize(reply, "product_unavailable", followup_flag=False)
+        if is_bulk_order_request(payload.message) and (is_product_query(payload.message) or detect_product_intent(payload.message)):
+            reply = f"Za večja naročila pišite na {INFO_EMAIL}."
+            reply = maybe_translate(reply, detected_lang)
+            return finalize(reply, "bulk_order_email", followup_flag=False)
 
     if state.get("awaiting_continue"):
         if is_negative(payload.message):
@@ -2456,6 +2533,10 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
         return finalize(llm_reply, "info_llm", followup_flag=False)
 
     if USE_ROUTER_V2:
+        info_during = handle_info_during_booking(payload.message, state)
+        if info_during:
+            reply = maybe_translate(info_during, detected_lang)
+            return finalize(reply, "info_during_reservation", followup_flag=False)
         decision = route_message(
             payload.message,
             has_active_booking=state.get("step") is not None,
@@ -2471,15 +2552,14 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
 
         def _info_resp(key: Optional[str], soft_sell: bool) -> str:
             reply_local = get_info_response(key or "")
-            if soft_sell and (key or "") in BOOKING_RELEVANT_KEYS:
+            if (not STRICT_POLICY) and soft_sell and (key or "") in BOOKING_RELEVANT_KEYS:
                 reply_local = f"{reply_local}\n\nŽelite, da pripravim **ponudbo**?"
             return reply_local
 
         def _product_resp(key: str) -> str:
+            if STRICT_POLICY and is_bulk_order_request(payload.message):
+                return f"Za večja naročila pišite na {INFO_EMAIL}."
             reply_local = strip_product_followup(get_product_response(key))
-            if is_bulk_order_request(payload.message):
-                reply_local = f"{reply_local}\n\nZa večja naročila nam pišite na info@kmetijapodgoro.si, da uskladimo količine in prevzem."
-            reply_local = f"{reply_local}\n\nTrgovina: {SHOP_URL}"
             return reply_local
 
         def _continuation(step_val: Optional[str], st: dict) -> str:
@@ -2494,6 +2574,10 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
                     llm_reply = f"{llm_reply}\n\n---\n\n📝 **Nadaljujemo z rezervacijo:**\n{cont}"
                 llm_reply = maybe_translate(llm_reply, detected_lang)
                 if state.get("step") is None and is_unknown_response(llm_reply) and inquiry_state.get("step") is None:
+                    if STRICT_POLICY:
+                        reply = "Trenutno nimam podatkov o tem."
+                        reply = maybe_translate(reply, detected_lang)
+                        return finalize(reply, "info_unknown", followup_flag=False)
                     inquiry_reply = start_inquiry_consent(inquiry_state)
                     inquiry_reply = maybe_translate(inquiry_reply, detected_lang)
                     return finalize(inquiry_reply, "inquiry_offer", followup_flag=False)
@@ -2553,7 +2637,7 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
     info_key = detect_info_intent(payload.message)
     if info_key:
         reply = get_info_response(info_key)
-        if info_key in BOOKING_RELEVANT_KEYS:
+        if (not STRICT_POLICY) and info_key in BOOKING_RELEVANT_KEYS:
             reply = f"{reply}\n\nŽelite, da pripravim **ponudbo**?"
         reply = maybe_translate(reply, detected_lang)
         return finalize(reply, "info_static", followup_flag=False)
@@ -2563,10 +2647,10 @@ def chat_endpoint(payload: ChatRequestWithSession) -> ChatResponse:
     if state["step"] is None:
         product_key = detect_product_intent(payload.message)
         if product_key:
-            reply = strip_product_followup(get_product_response(product_key))
-            if is_bulk_order_request(payload.message):
-                reply = f"{reply}\n\nZa večja naročila nam pišite na info@kmetijapodgoro.si, da uskladimo količine in prevzem."
-            reply = f"{reply}\n\nTrgovina: {SHOP_URL}"
+            if STRICT_POLICY and is_bulk_order_request(payload.message):
+                reply = f"Za večja naročila pišite na {INFO_EMAIL}."
+            else:
+                reply = strip_product_followup(get_product_response(product_key))
             reply = maybe_translate(reply, detected_lang)
             return finalize(reply, "product_static", followup_flag=False)
 

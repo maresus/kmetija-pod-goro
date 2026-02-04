@@ -9,6 +9,10 @@ from typing import Optional
 from app.services.product_service import find_products
 
 SHORT_MODE = os.getenv("SHORT_MODE", "true").strip().lower() in {"1", "true", "yes", "on"}
+STRICT_POLICY = os.getenv("STRICT_POLICY", "true").strip().lower() in {"1", "true", "yes", "on"}
+SHOP_BASE_URL = os.getenv("SHOP_BASE_URL", "https://kmetijapodgoro.si").rstrip("/")
+INFO_EMAIL = os.getenv("INFO_EMAIL", "info@kmetijapodgoro.si")
+DISABLE_INQUIRY = os.getenv("DISABLE_INQUIRY", "true").strip().lower() in {"1", "true", "yes", "on"}
 
 INFO_RESPONSES = {
     "pozdrav": """Pozdravljeni pri Domačiji Kmetija Pod Goro! 😊
@@ -81,20 +85,23 @@ Zajtrk je vključen v ceno! 🥐""",
     "placilo": """Sprejemamo gotovino in večino plačilnih kartic.""",
     "kontakt": """Kontakt: **02 700 12 34** / **031 777 888**
 Email: **info@kmetijapodgoro.si**""",
+    "lokacija": """Nahajamo se na: **Gorska cesta 7, 2315 Zeleno Polje**.""",
     "min_nocitve": """Minimalno bivanje je:
 - **3 nočitve** v juniju, juliju in avgustu
 - **2 nočitvi** v ostalih mesecih""",
     "kapaciteta_mize": """Jedilnica 'Pri peči' sprejme do 15 oseb, 'Pri vrtu' pa do 35 oseb.""",
     "alergije": """Seveda, prilagodimo jedi za alergije (gluten, laktoza) in posebne prehrane (vegan/vegetarijan).""",
-    "vina": """Ponujamo izbor lokalnih vin. Če želite priporočilo, mi napišite kakšna vina imate radi.""",
-    "turizem": """V okolici so odlične možnosti za izlete (Pohorje, slapovi, razgledišča). Če želite, lahko predlagam konkretne poti.""",
+    "vina": """Na voljo so lokalna vina s Pohorja.""",
+    "turizem": """V okolici so odlične možnosti za izlete (Pohorje, slapovi, razgledišča).""",
+    "smucisce": """Najbližja smučišča so Mariborsko Pohorje in Areh (približno 25–35 minut vožnje).""",
+    "terme": """Najbližje terme so Terme Zreče in Terme Ptuj (približno 30–40 minut vožnje).""",
     "kolesa": """Izposoja koles je možna po dogovoru. Za več informacij nas kontaktirajte.""",
     "skalca": """Slap Skalca je prijeten izlet v bližini – priporočamo sprehod ob potočku.""",
     "darilni_boni": """Na voljo imamo darilne bone. Sporočite znesek in pripravimo bon za vas.""",
     "jedilnik": """Jedilnik se spreminja glede na sezono. Če želite, vam pošljemo aktualno vikend ponudbo.""",
     "druzina": """Pri nas smo družinska domačija in radi sprejmemo družine. Imamo tudi igrala za otroke.""",
     "kmetija": """Kmetija Pod Goro je turistična kmetija na Pohorju z nastanitvijo, kosili in domačimi izdelki.""",
-    "gibanica": """Pohorska gibanica je naša specialiteta. Priporočam, da jo poskusite ob obisku!""",
+    "gibanica": """Pohorska gibanica je naša specialiteta.""",
     "izdelki": """V ponudbi imamo marmelade, likerje, mesnine, čaje, sirupe in darilne pakete.""",
 }
 
@@ -268,13 +275,15 @@ INFO_FOLLOWUP_PHRASES = {
 def get_info_response(key: str) -> str:
     if key.startswith("topic:"):
         topic_key = key.split(":", 1)[1]
+        if topic_key in INFO_RESPONSES:
+            return maybe_shorten_response(_apply_policy(INFO_RESPONSES[topic_key]))
         if topic_key in _TOPIC_RESPONSES:
-            return maybe_shorten_response(_TOPIC_RESPONSES[topic_key])
+            return maybe_shorten_response(_apply_policy(_TOPIC_RESPONSES[topic_key]))
     if key in INFO_RESPONSES_VARIANTS:
         variants = INFO_RESPONSES_VARIANTS[key]
         chosen = min(variants, key=len) if SHORT_MODE else random.choice(variants)
-        return maybe_shorten_response(chosen)
-    return maybe_shorten_response(INFO_RESPONSES.get(key, "Kako vam lahko pomagam?"))
+        return maybe_shorten_response(_apply_policy(chosen))
+    return maybe_shorten_response(_apply_policy(INFO_RESPONSES.get(key, "Kako vam lahko pomagam?")))
 
 
 def maybe_shorten_response(text: str) -> str:
@@ -293,13 +302,51 @@ def maybe_shorten_response(text: str) -> str:
     return clipped
 
 
+def _apply_policy(text: str) -> str:
+    if not STRICT_POLICY or not text:
+        return text
+    normalized = " ".join(text.replace("\n", " ").split())
+    normalized = re.sub(r"(?i)trgovina:\s*https?://\\S+", "", normalized).strip()
+    sentences = re.split(r"(?<=[.!?])\s+", normalized)
+    filtered = []
+    for s in sentences:
+        s_clean = s.strip()
+        if not s_clean:
+            continue
+        low = s_clean.lower()
+        if s_clean.endswith("?"):
+            continue
+        if any(p in low for p in ["če želite", "vas zanima", "lahko vam", "priporočam", "predlagam", "sporočite", "povejte"]):
+            continue
+        filtered.append(s_clean)
+    if not filtered:
+        return normalized[:300].rstrip(".") + "."
+    return " ".join(filtered[:4])
+
+
+def _slugify(text: str) -> str:
+    slug = text.lower()
+    slug = slug.replace("č", "c").replace("š", "s").replace("ž", "z")
+    slug = re.sub(r"[^a-z0-9]+", "-", slug).strip("-")
+    return slug
+
+
+def _product_link_from_url(url: str, title: str | None) -> str:
+    if url and "/izdelek/" in url:
+        slug = url.split("/izdelek/")[1].split("/")[0]
+        return f"{SHOP_BASE_URL}/izdelek/{slug}/"
+    if title:
+        return f"{SHOP_BASE_URL}/izdelek/{_slugify(title)}/"
+    return f"{SHOP_BASE_URL}/izdelek/"
+
+
 def detect_info_intent(message: str) -> Optional[str]:
     text = message.lower().strip()
-    if any(w in text for w in ["kdaj ste odprti", "odpiralni", "delovni čas", "kdaj odprete"]):
+    if any(w in text for w in ["kdaj ste odprti", "odpiralni", "delovni čas", "kdaj odprete", "zadnji prihod"]):
         return "odpiralni_cas"
     if "zajtrk" in text and "večerj" not in text:
         return "zajtrk"
-    if any(w in text for w in ["koliko stane večerja", "cena večerje"]):
+    if any(w in text for w in ["koliko stane večerja", "cena večerje", "večerja", "vecerja", "večerjo"]):
         return "vecerja"
     if any(
         w in text
@@ -323,14 +370,30 @@ def detect_info_intent(message: str) -> Optional[str]:
         return "wifi"
     if any(w in text for w in ["prijava", "odjava", "check in", "check out"]):
         return "prijava_odjava"
-    if "parkir" in text:
+    if "parkir" in text or "parking" in text:
         return "parking"
-    if any(w in text for w in ["pes", "psa", "psi", "psov", "mačk", "žival", "ljubljenč", "kuža", "kuz", "dog"]):
+    if re.search(r"\b(pes|psa|psi|psov|mačk|mack|žival|ljubljenč|kuž|kuz|dog)\b", text):
         return "zivali"
     if any(w in text for w in ["plačilo", "kartic", "gotovina"]):
         return "placilo"
     if any(w in text for w in ["telefon", "telefonsko", "številka", "stevilka", "gsm", "mobitel", "mobile", "phone"]):
         return "kontakt"
+    if any(w in text for w in ["email", "e-mail", "epošta", "e-pošta", "mail"]):
+        return "kontakt"
+    if any(
+        w in text
+        for w in [
+            "kje ste",
+            "kje se nahajate",
+            "naslov",
+            "lokacija",
+            "kje ste doma",
+            "kje ste locirani",
+            "kako pridem",
+            "navodila za pot",
+        ]
+    ):
+        return "lokacija"
     if any(w in text for w in ["minimal", "najmanj noči", "najmanj nočitev", "min nočitev"]):
         return "min_nocitve"
     if any(w in text for w in ["koliko miz", "kapaciteta"]):
@@ -339,6 +402,10 @@ def detect_info_intent(message: str) -> Optional[str]:
         return "alergije"
     if any(w in text for w in ["vino", "vina", "vinsko", "vinska", "wine", "wein", "vinci"]):
         return "vina"
+    if any(w in text for w in ["smučišče", "smucisce", "smučanje", "smucanje", "ski"]):
+        return "smucisce"
+    if any(w in text for w in ["terme", "termal", "spa", "wellness"]):
+        return "terme"
     if any(
         w in text
         for w in [
@@ -397,10 +464,12 @@ def detect_info_intent(message: str) -> Optional[str]:
         return "druzina"
     if "kmetij" in text or "kmetijo" in text:
         return "kmetija"
-    if "gibanica" in text:
-        return "gibanica"
+    if "gibanic" in text:
+        if any(tok in text for tok in ["kaj je", "pohorska gibanica", "kaj pomeni"]) and "imate" not in text:
+            return "gibanica"
+        return None
     if any(w in text for w in ["izdelk", "trgovin", "katalog", "prodajate"]):
-        return "izdelki"
+        return None
     return None
 
 
@@ -410,19 +479,29 @@ def detect_product_intent(message: str) -> Optional[str]:
         return "liker"
     if any(w in text for w in ["marmelad", "džem", "dzem", "jagod", "marelič"]):
         return "marmelada"
-    if "gibanica" in text:
+    if "gibanic" in text:
         return "gibanica_narocilo"
     if any(w in text for w in ["bunka", "bunko", "bunke"]):
         return "bunka"
+    if any(w in text for w in ["paštet", "pastet", "namaz", "pesto"]):
+        return "namaz"
+    if "sirup" in text or "sok" in text:
+        return "sirup"
+    if "čaj" in text or "caj" in text:
+        return "caj"
+    if "paket" in text or "daril" in text:
+        return "paket"
+    if any(w in text for w in ["salam", "klobas", "mesnin"]):
+        return "mesn"
     if any(w in text for w in ["izdelk", "prodaj", "kupiti", "kaj imate", "trgovin"]):
         return "izdelki_splosno"
     return None
 
 
 def get_product_response(key: str) -> str:
-    if key in PRODUCT_RESPONSES:
-        return random.choice(PRODUCT_RESPONSES[key])
-    return PRODUCT_RESPONSES["izdelki_splosno"][0]
+    if key == "gibanica_narocilo":
+        return f"Tega izdelka ni v spletni trgovini. Pišite na {INFO_EMAIL}."
+    return answer_product_question(key or "")
 
 
 def is_food_question_without_booking_intent(message: str) -> bool:
@@ -499,6 +578,8 @@ def is_ambiguous_reservation_request(message: str) -> bool:
 
 
 def is_ambiguous_inquiry_request(message: str) -> bool:
+    if DISABLE_INQUIRY:
+        return False
     lowered = message.lower()
     if any(w in lowered for w in ["večerj", "vecerj"]):
         return False
@@ -512,6 +593,8 @@ def is_ambiguous_inquiry_request(message: str) -> bool:
 
 
 def is_inquiry_trigger(message: str) -> bool:
+    if DISABLE_INQUIRY:
+        return False
     lowered = message.lower()
     if any(w in lowered for w in ["večerj", "vecerj"]):
         return False
@@ -640,20 +723,23 @@ def detect_router_intent(message: str, state: dict[str, Optional[str | int]]) ->
 def format_products(query: str) -> str:
     products = find_products(query)
     if not products:
-        return "Trenutno nimam podatkov o izdelkih, prosim preverite spletno trgovino ali nas kontaktirajte."
+        return f"Tega izdelka ni v spletni trgovini. Pišite na {INFO_EMAIL}."
 
     product_lines = [
         f"- {product.name}: {product.price:.2f} EUR, {product.weight:.2f} kg"
         for product in products
     ]
-    header = "Na voljo imamo naslednje izdelke:\n"
-    return header + "\n".join(product_lines)
+    header = "Na voljo imamo naslednje izdelke: "
+    return _apply_policy(header + " ".join(product_lines) + ".")
 
 
 def answer_product_question(message: str) -> str:
     from app.rag.knowledge_base import KNOWLEDGE_CHUNKS
 
     lowered = message.lower()
+    if STRICT_POLICY:
+        return _strict_product_answer(lowered, KNOWLEDGE_CHUNKS)
+
     category = None
     if "marmelad" in lowered or "džem" in lowered or "dzem" in lowered:
         category = "marmelad"
@@ -727,41 +813,163 @@ def answer_product_question(message: str) -> str:
             break
 
     if not unique:
-        if category == "marmelad":
-            return (
-                "Imamo več domačih marmelad (npr. božična, jagodna, borovničeva). "
-                "Celoten izbor si lahko ogledate v spletni trgovini: https://kmetijapodgoro.si/kovacnikova-spletna-trgovina/."
-            )
-        if category == "liker":
-            return "Na voljo je domač borovničev liker (13 €) ter nekaj drugih domačih likerjev."
-        return (
-            "Trenutno v bazi ne najdem konkretnih izdelkov za to vprašanje. "
-            "Predlagam, da pobrskaš po spletni trgovini: https://kmetijapodgoro.si/kovacnikova-spletna-trgovina/."
-        )
+        if category is None:
+            fallback = []
+            for c in KNOWLEDGE_CHUNKS:
+                if "/izdelek/" in (c.url or ""):
+                    fallback.append(c)
+                if len(fallback) >= 3:
+                    break
+            if fallback:
+                sentences = []
+                for c in fallback:
+                    text = c.paragraph.strip() if c.paragraph else ""
+                    price = ""
+                    price_match = re.match(r'^(\d+[,\.]\d+\s*€)', text)
+                    if price_match:
+                        price = price_match.group(1)
+                    title = c.title or "Izdelek"
+                    link = _product_link_from_url(c.url, title)
+                    if price:
+                        sentences.append(f"{title} ({price}). Najdete ga tukaj: {link}.")
+                    else:
+                        sentences.append(f"{title}. Najdete ga tukaj: {link}.")
+                return " ".join(sentences)
+        # synthesize a direct link for known categories
+        slug_map = {
+            "marmelad": "marmelada",
+            "liker": "borovnices-liker",
+            "bunka": "pohorska-bunka",
+            "mesn": "hisna-suha-klobasa",
+            "namaz": "cemazev-pesto",
+            "sirup": "metin-sirup",
+            "caj": "zeliscni-caj",
+            "paket": "darilni-paket",
+        }
+        if category in slug_map:
+            link = f"{SHOP_BASE_URL}/izdelek/{slug_map[category]}/"
+            return f"Najdete tukaj: {link}."
+        return f"Tega izdelka ni v spletni trgovini. Pišite na {INFO_EMAIL}."
 
-    lines = ["Na voljo imamo:"]
+    sentences: list[str] = []
+    for c in unique[:3]:
+        text = c.paragraph.strip() if c.paragraph else ""
+        price = ""
+        price_match = re.match(r'^(\d+[,\.]\d+\s*€)', text)
+        if price_match:
+            price = price_match.group(1)
+        title = c.title or "Izdelek"
+        link = _product_link_from_url(c.url, title)
+        if price:
+            sentences.append(f"{title} ({price}). Najdete ga tukaj: {link}.")
+        else:
+            sentences.append(f"{title}. Najdete ga tukaj: {link}.")
+
+    return " ".join(sentences)
+
+
+def _strict_product_answer(lowered: str, chunks) -> str:
+    category = None
+    if "marmelad" in lowered or "džem" in lowered or "dzem" in lowered:
+        category = "marmelad"
+    elif (
+        "liker" in lowered
+        or "žganj" in lowered
+        or "zganj" in lowered
+        or "žgan" in lowered
+        or "zgan" in lowered
+        or "žgane" in lowered
+        or "zganje" in lowered
+        or "tepkovec" in lowered
+        or "borovni" in lowered
+    ):
+        category = "liker"
+    elif "bunk" in lowered:
+        category = "bunka"
+    elif "salam" in lowered or "klobas" in lowered or "mesn" in lowered:
+        category = "mesn"
+    elif "namaz" in lowered or "pašteta" in lowered or "pasteta" in lowered or "pesto" in lowered:
+        category = "namaz"
+    elif "sirup" in lowered or "sok" in lowered:
+        category = "sirup"
+    elif "čaj" in lowered or "caj" in lowered:
+        category = "caj"
+    elif "paket" in lowered or "daril" in lowered:
+        category = "paket"
+
+    results = []
+    for c in chunks:
+        if "/izdelek/" not in (c.url or ""):
+            continue
+        url_lower = c.url.lower()
+        title_lower = (c.title or "").lower()
+        if category:
+            if category == "marmelad" and ("marmelad" in url_lower or "marmelad" in title_lower):
+                if "paket" in url_lower or "paket" in title_lower:
+                    continue
+                results.append(c)
+            elif category == "liker" and ("liker" in url_lower or "tepkovec" in url_lower):
+                results.append(c)
+            elif category == "bunka" and "bunka" in url_lower:
+                results.append(c)
+            elif category == "mesn" and ("salama" in url_lower or "klobas" in url_lower):
+                results.append(c)
+            elif category == "namaz" and ("namaz" in url_lower or "pastet" in url_lower or "pesto" in url_lower):
+                results.append(c)
+            elif category == "sirup" and ("sirup" in url_lower or "sok" in url_lower):
+                results.append(c)
+            elif category == "caj" and "caj" in url_lower:
+                results.append(c)
+            elif category == "paket" and "paket" in url_lower:
+                results.append(c)
+        else:
+            for word in [w for w in lowered.split() if len(w) > 3]:
+                if word in url_lower or word in title_lower:
+                    results.append(c)
+                    break
+
+    seen = set()
+    unique = []
+    for c in results:
+        if c.url not in seen:
+            seen.add(c.url)
+            unique.append(c)
+        if len(unique) >= 3:
+            break
+
+    if not unique:
+        if category is None:
+            return f"Izdelke najdete tukaj: {SHOP_BASE_URL}/izdelek/."
+        slug_map = {
+            "marmelad": "marmelada",
+            "liker": "borovnices-liker",
+            "bunka": "pohorska-bunka",
+            "mesn": "hisna-suha-klobasa",
+            "namaz": "cemazev-pesto",
+            "sirup": "metin-sirup",
+            "caj": "zeliscni-caj",
+            "paket": "darilni-paket",
+        }
+        if category in slug_map:
+            link = f"{SHOP_BASE_URL}/izdelek/{slug_map[category]}/"
+            return f"Najdete ga tukaj: {link}."
+        return f"Tega izdelka ni v spletni trgovini. Pišite na {INFO_EMAIL}."
+
+    sentences: list[str] = []
     for c in unique:
         text = c.paragraph.strip() if c.paragraph else ""
         price = ""
         price_match = re.match(r'^(\d+[,\.]\d+\s*€)', text)
         if price_match:
             price = price_match.group(1)
-            text = text[len(price_match.group(0)) :].strip()
-        for marker in [" Kategorija:", " V naši ponudbi", " Šifra:"]:
-            idx = text.find(marker)
-            if idx > 10:
-                text = text[:idx]
-        if len(text) > 100:
-            text = text[:100] + "..."
-
         title = c.title or "Izdelek"
+        link = _product_link_from_url(c.url, title)
         if price:
-            lines.append(f"• **{title}** ({price}) - {text}")
+            sentences.append(f"{title} ({price}). Najdete ga tukaj: {link}.")
         else:
-            lines.append(f"• **{title}** - {text}")
-        lines.append(f"  👉 {c.url}")
+            sentences.append(f"{title}. Najdete ga tukaj: {link}.")
 
-    return "\n".join(lines)
+    return " ".join(sentences)
 
 
 def is_product_query(message: str) -> bool:
